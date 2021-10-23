@@ -103,6 +103,12 @@
                                 {{ __('Manage Account') }}
                             </div>
 
+                            @if (Auth::guard(CompanyConst::GUARD)->check())
+                                <x-jet-dropdown-link href="{{ route('job_offers.create') }}">
+                                    {{ '求人情報登録' }}
+                                </x-jet-dropdown-link>
+                            @endif
+
                             <x-jet-dropdown-link href="{{ route($prefix . 'profile.show') }}">
                                 {{ __('Profile') }}
                             </x-jet-dropdown-link>
@@ -176,6 +182,13 @@
                     :active="request()->routeIs($prefix . 'profile.show')">
                     {{ __('Profile') }}
                 </x-jet-responsive-nav-link>
+
+                @if (Auth::guard(CompanyConst::GUARD)->check())
+                    <x-jet-dropdown-link href="{{ route('job_offers.create') }}">
+                        {{ '求人情報登録' }}
+                    </x-jet-dropdown-link>
+                @endif
+
                 <!-- Authentication -->
                 <form method="POST" action="{{ route($prefix . 'logout') }}">
                     @csrf
