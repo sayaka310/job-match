@@ -15,8 +15,7 @@
                 <input type="file" class="hidden"
                             wire:model="photo"
                             x-ref="photo"
-                            x-on:change="
-                                    photoName = $refs.photo.files[0].name;
+                            x-on:change="photoName = $refs.photo.files[0].name;
                                     const reader = new FileReader();
                                     reader.onload = (e) => {
                                         photoPreview = e.target.result;
@@ -34,7 +33,7 @@
                 <!-- New Profile Photo Preview -->
                 <div class="mt-2" x-show="photoPreview">
                     <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
-                          x-bind:style="'background-image: url(\'' photoPreview '\');'">
+                        x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                     </span>
                 </div>
 
