@@ -38,12 +38,27 @@ class JobOfferController extends Controller
         // $jobOffers = JobOffer::with(['company', 'occupation'])->openData()->latest()->Paginate(5);
         $params = $request->query();
         $jobOffers = JobOffer::search($params)->openData()
-            ->with(['company', 'occupation'])->latest()->paginate(5);
+            // ->with(['company', 'occupation'])->latest()->paginate(5);
+            ->order($params)->with(['company', 'occupation'])->paginate(5);
 
         $occupation = $request->occupation;
         $jobOffers->appends(compact('occupation'));
+
+        $search_occupation = empty($occupation) ? [] : ['occupation' => $occupation];
+
+        $sort = empty($request->sort) ? [] : ['sort' => $request->sort];
+
         $occupations = Occupation::all();
-        return view('job_offers.index', compact('jobOffers', 'occupations'));
+        // return view('job_offers.index', compact('jobOffers', 'occupations'));
+        return view(
+                'job_offers.index',
+                compact(
+                    'jobOffers',
+                    'occupations',
+                    'search_occupation',
+                    'sort'
+                )
+            );
     }
 
     /**
