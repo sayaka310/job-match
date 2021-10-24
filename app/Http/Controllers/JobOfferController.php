@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\JobOfferRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class JobOfferController extends Controller
 {
@@ -18,9 +19,31 @@ class JobOfferController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // $user = '';
+        // foreach (config('fortify.users') as $guard) {
+        //     if (Auth::guard(Str::plural($guard))->check()) {
+        //         $user = Auth::guard(Str::plural($guard))->user();
+        //     }
+        // }
+
+        // if (empty($user)) {
+        //     return view('welcome');
+        // } else {
+        //     $jobOffers = JobOffer::with(['company', 'occupation'])->latest()->paginate(5);
+        //     $occupations = Occupation::all();
+        // return view('job_offers.index', compact('jobOffers', 'occupations'));
+
+        // $jobOffers = JobOffer::with(['company', 'occupation'])->openData()->latest()->Paginate(5);
+        $params = $request->query();
+        $jobOffers = JobOffer::search($params)->openData()
+            ->with(['company', 'occupation'])->latest()->paginate(5);
+
+        $occupation = $request->occupation;
+        $jobOffers->appends(compact('occupation'));
+        $occupations = Occupation::all();
+        return view('job_offers.index', compact('jobOffers', 'occupations'));
     }
 
     /**
@@ -76,7 +99,8 @@ class JobOfferController extends Controller
         if (Auth::guard(UserConst::GUARD)->check()) {
             JobOfferView::updateOrCreate([
                 'job_offer_id' => $jobOffer->id,
-                'user_id' => Auth::guard(UserConst::GUARD)->user()->id,
+                // 'user_id' => Auth::guard(UserConst::GUARD)->user()->id,
+                'user_id' => Auth::user()->id,
             ]);
         }
         return view('job_offers.show', compact('jobOffer'));

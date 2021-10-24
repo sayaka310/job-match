@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobOfferController;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +15,14 @@ use App\Http\Controllers\JobOfferController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+Route::get('/', [JobOfferController::class, 'index'])
+->name('root')
+->middleware('auth:companies,users');
 
-// Route::get('/', [JobOfferController::class, 'index'])
-//     ->name('root');
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome')
+    ->middleware('guest:companies,users');
 
 Route::resource('job_offers', JobOfferController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy'])
