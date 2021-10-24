@@ -35,6 +35,6 @@ Route::resource('job_offers', JobOfferController::class)
 
     Route::resource('job_offers.entries', EntryController::class)
     ->only(['store', 'destroy'])
-->middleware(['auth:users']);
+->middleware('auth:users');
 
 require __DIR__ . '/auth.php';
