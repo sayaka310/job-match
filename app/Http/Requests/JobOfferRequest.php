@@ -23,12 +23,28 @@ class JobOfferRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        // return [
+        //     'title' => 'required|string|max:50',
+        //     'occupation_id' => 'required|exists:occupations,id',
+        //     'due_date' => 'required|after:yesterday',
+        //     'description' => 'required|string|max:2000',
+        //     'status' => 'nullable|boolean',
+        // ];
+
+        $route = $this->route()->getName();
+
+        $rule = [
             'title' => 'required|string|max:50',
             'occupation_id' => 'required|exists:occupations,id',
             'due_date' => 'required|after:yesterday',
             'description' => 'required|string|max:2000',
             'status' => 'nullable|boolean',
         ];
+
+        if ($route === 'job_offer.update') {
+            $rule['due_date'] = 'required|date';
+        }
+
+        return $rule;
     }
 }
